@@ -38,9 +38,12 @@ public class ArisDonatePlugin extends JavaPlugin {
     private NamespacedKey keyDonateRank;
     private NamespacedKey keyKitId;
 
+    private static final int CONFIG_VERSION = 2;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        migrateConfigIfNeeded();
 
         keyDonateRank = new NamespacedKey(this, "donate_rank");
         keyKitId = new NamespacedKey(this, "kit_id");
@@ -225,6 +228,35 @@ public class ArisDonatePlugin extends JavaPlugin {
         if (jailManager   != null) jailManager.save();
         if (kitManager    != null) kitManager.saveCooldowns();
         getLogger().info("ArisDonate выключен, данные сохранены.");
+    }
+
+    /**
+     * Если на диске лежит config.yml старой версии (например, от первой
+     * сборки плагина), переименовываем его в config-backup-vN.yml и
+     * распаковываем свежий встроенный config.yml. Player-данные хранятся
+     * отдельно (players.yml, kit_cooldowns.yml, homes.yml и т.д.), поэтому
+     * прогресс не теряется.
+     */
+    private void migrateConfigIfNeeded() {
+        int diskVersion = getConfig().getInt("config-version", 1);
+        if (diskVersion >= CONFIG_VERSION) return;
+        java.io.File cfgFile = new java.io.File(getDataFolder(), "config.yml");
+        java.io.File backup = new java.io.File(getDataFolder(),
+                "config-backup-v" + diskVersion + "-" + System.currentTimeMillis() + ".yml");
+        if (cfgFile.exists()) {
+            if (cfgFile.renameTo(backup)) {
+                getLogger().warning("Старый config.yml (v" + diskVersion
+                        + ") сохранён как " + backup.getName());
+            } else {
+                getLogger().warning("Не смог переименовать старый config.yml, перезапишу.");
+                //noinspection ResultOfMethodCallIgnored
+                cfgFile.delete();
+            }
+        }
+        saveResource("config.yml", true);
+        reloadConfig();
+        getLogger().info("config.yml обновлён до v" + CONFIG_VERSION
+                + ". Игровые данные (players.yml и т.д.) не затронуты.");
     }
 
     private void bind(String name, org.bukkit.command.CommandExecutor exec) {
