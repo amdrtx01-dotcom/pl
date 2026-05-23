@@ -1,0 +1,12 @@
+# Build output
+ArisDonate/target/
+ArisDonate-release/
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
