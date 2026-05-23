@@ -392,6 +392,11 @@ commands:
     description: Список китов
   shop:
     description: Магазин сервера
+  sphere:
+    description: Магазин/команды сфер
+    usage: /sphere shop|list|give|coins|bal
+  spheres:
+    description: Магазин сфер (alias /sphere shop)
   rules:
     description: Правила сервера
   motd:
@@ -461,3 +466,4 @@ permissions:
       arisdonate.commandspy: true
       arisdonate.kit.*: true
       arisdonate.kit.bypass-cooldown: true
+      arisdonate.sphere.admin: true

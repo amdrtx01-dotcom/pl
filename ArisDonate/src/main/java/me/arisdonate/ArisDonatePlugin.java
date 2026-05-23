@@ -9,6 +9,7 @@ import me.arisdonate.commands.util.*;
 import me.arisdonate.commands.warp.*;
 import me.arisdonate.gui.DonateGui;
 import me.arisdonate.gui.KitsGui;
+import me.arisdonate.gui.SphereShopGui;
 import me.arisdonate.listeners.*;
 import me.arisdonate.managers.*;
 import me.arisdonate.util.ChatFormatter;
@@ -34,11 +35,15 @@ public class ArisDonatePlugin extends JavaPlugin {
     private ChatFormatter chatFormatter;
     private DonateGui donateGui;
     private KitsGui kitsGui;
+    private SphereShopGui sphereShopGui;
+    private SphereManager sphereManager;
+    private EconomyManager economyManager;
 
     private NamespacedKey keyDonateRank;
     private NamespacedKey keyKitId;
+    private NamespacedKey keySphereId;
 
-    private static final int CONFIG_VERSION = 2;
+    private static final int CONFIG_VERSION = 3;
 
     @Override
     public void onEnable() {
@@ -47,6 +52,12 @@ public class ArisDonatePlugin extends JavaPlugin {
 
         keyDonateRank = new NamespacedKey(this, "donate_rank");
         keyKitId = new NamespacedKey(this, "kit_id");
+        keySphereId = new NamespacedKey(this, "sphere_id");
+
+        // SphereManager должен инициализироваться ДО KitManager,
+        // потому что киты могут ссылаться на сферы через { sphere: <id> }.
+        sphereManager = new SphereManager(this);
+        economyManager = new EconomyManager(this);
 
         donateManager = new DonateManager(this);
         homeManager = new HomeManager(this);
@@ -64,12 +75,15 @@ public class ArisDonatePlugin extends JavaPlugin {
         chatFormatter = new ChatFormatter(this);
         donateGui = new DonateGui(this);
         kitsGui = new KitsGui(this);
+        sphereShopGui = new SphereShopGui(this);
 
         // Listeners
         getServer().getPluginManager().registerEvents(new ChatFormatListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new DonateGuiListener(this), this);
         getServer().getPluginManager().registerEvents(new KitsGuiListener(this), this);
+        getServer().getPluginManager().registerEvents(new SphereShopListener(this), this);
+        getServer().getPluginManager().registerEvents(new ShopMenuListener(this), this);
         getServer().getPluginManager().registerEvents(new FreezeMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
 
@@ -210,6 +224,8 @@ public class ArisDonatePlugin extends JavaPlugin {
         bind("kit", new KitCommand(this));
         bind("kits", new KitListCommand(this));
         bind("shop", new ShopCommand(this));
+        bind("sphere", new SphereCommand(this));
+        bind("spheres", new SphereCommand(this));
         bind("rules", new SimpleTextCommand(this, "rules"));
         bind("motd", new SimpleTextCommand(this, "motd"));
         bind("help-aris", new HelpArisCommand(this));
@@ -227,6 +243,8 @@ public class ArisDonatePlugin extends JavaPlugin {
         if (muteManager   != null) muteManager.save();
         if (jailManager   != null) jailManager.save();
         if (kitManager    != null) kitManager.saveCooldowns();
+        if (sphereManager != null) sphereManager.stop();
+        if (economyManager != null) economyManager.save();
         getLogger().info("ArisDonate выключен, данные сохранены.");
     }
 
@@ -273,7 +291,12 @@ public class ArisDonatePlugin extends JavaPlugin {
 
     public NamespacedKey keyDonateRank() { return keyDonateRank; }
     public NamespacedKey keyKitId()      { return keyKitId; }
+    public NamespacedKey keySphereId()   { return keySphereId; }
     public KitsGui getKitsGui()          { return kitsGui; }
+    public DonateGui getDonateGui()      { return donateGui; }
+    public SphereShopGui getSphereShopGui() { return sphereShopGui; }
+    public SphereManager getSphereManager() { return sphereManager; }
+    public EconomyManager getEconomyManager() { return economyManager; }
     public DonateManager getDonateManager()       { return donateManager; }
     public HomeManager getHomeManager()           { return homeManager; }
     public WarpManager getWarpManager()           { return warpManager; }
@@ -288,5 +311,4 @@ public class ArisDonatePlugin extends JavaPlugin {
     public KitManager getKitManager()             { return kitManager; }
     public MessageManager getMessageManager()     { return messageManager; }
     public ChatFormatter getChatFormatter()       { return chatFormatter; }
-    public DonateGui getDonateGui()               { return donateGui; }
 }

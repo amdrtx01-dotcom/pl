@@ -108,6 +108,16 @@ public class KitManager {
 
     @SuppressWarnings("unchecked")
     private ItemStack parseItem(Map<?, ?> raw) {
+        // Спец-формат: { sphere: <id> } — взять предмет-сферу из SphereManager
+        Object sphereId = raw.get("sphere");
+        if (sphereId != null && plugin.getSphereManager() != null) {
+            me.arisdonate.models.Sphere s = plugin.getSphereManager().getSphere(sphereId.toString());
+            if (s != null) {
+                ItemStack si = s.toItem(plugin);
+                if (raw.get("amount") != null) si.setAmount(((Number) raw.get("amount")).intValue());
+                return si;
+            }
+        }
         Object mat = raw.get("material");
         if (mat == null) return null;
         Material m = Material.matchMaterial(mat.toString());

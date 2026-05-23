@@ -5,7 +5,7 @@
 
 # Версия конфига — не меняй вручную. Плагин делает резервную копию
 # и подменяет конфиг, если на диске лежит старая версия.
-config-version: 2
+config-version: 3
 
 default-home-limit: 1
 discord-url: "https://discord.gg/your-server"
@@ -404,6 +404,7 @@ kits:
       - { material: ENCHANTED_GOLDEN_APPLE, amount: 16 }
       - { material: TOTEM_OF_UNDYING, amount: 4 }
       - { material: FIREWORK_ROCKET, amount: 64 }
+      - { sphere: bounce }
       - name: "<grad:#A020F0:#5F00FF>Шалкер Galaxy</grad>"
         material: PURPLE_SHULKER_BOX
         amount: 1
@@ -435,6 +436,7 @@ kits:
       - { material: ELYTRA, amount: 1, enchantments: ["unbreaking:3", "mending:1"] }
       - { material: ENCHANTED_GOLDEN_APPLE, amount: 16 }
       - { material: TOTEM_OF_UNDYING, amount: 4 }
+      - { sphere: nebula }
       - name: "<grad:#FF69B4:#FF1493>Декоративный шалкер</grad>"
         material: PINK_SHULKER_BOX
         amount: 1
@@ -466,6 +468,7 @@ kits:
       - { material: ELYTRA, amount: 1, enchantments: ["unbreaking:3", "mending:1"] }
       - { material: ENCHANTED_GOLDEN_APPLE, amount: 24 }
       - { material: TOTEM_OF_UNDYING, amount: 5 }
+      - { sphere: cosmos }
       - name: "<grad:#1E90FF:#0000CD>Шалкер Cosmos</grad>"
         material: BLUE_SHULKER_BOX
         amount: 1
@@ -498,6 +501,7 @@ kits:
       - { material: ENCHANTED_GOLDEN_APPLE, amount: 24 }
       - { material: TOTEM_OF_UNDYING, amount: 6 }
       - { material: FLINT_AND_STEEL, amount: 1, enchantments: ["unbreaking:3"] }
+      - { sphere: phoenix }
       - name: "<grad:#FF4500:#FF0000>Огненный шалкер</grad>"
         material: RED_SHULKER_BOX
         amount: 1
@@ -572,6 +576,7 @@ kits:
       - { material: TOTEM_OF_UNDYING, amount: 8 }
       - { material: ENDER_PEARL, amount: 32 }
       - { material: FIREWORK_ROCKET, amount: 64 }
+      - { sphere: phantom }
       - name: "<grad:#FFD700:#FF8C00>★ Шалкер Ариса ★</grad>"
         material: ORANGE_SHULKER_BOX
         amount: 1
@@ -672,6 +677,7 @@ kits:
       - { material: TOTEM_OF_UNDYING, amount: 16 }
       - { material: ENDER_PEARL, amount: 64 }
       - { material: FIREWORK_ROCKET, amount: 64 }
+      - { sphere: chaos }
       - name: "<grad:#FF8C00:#FF1493>✦ Шалкер ArisPlus ✦</grad>"
         material: YELLOW_SHULKER_BOX
         amount: 1
@@ -703,6 +709,187 @@ kits:
           - { material: ENCHANTING_TABLE, amount: 1 }
           - { material: SMITHING_TABLE, amount: 1 }
           - { material: CRAFTING_TABLE, amount: 4 }
+
+# ────────────────────────────────────────────────────────────────
+# СФЕРЫ / ШАРИКИ — носятся в шлеме или второй руке.
+# Каждые 2 сек SphereManager навешивает potion-эффекты пока сфера экипирована.
+# Балансированы: сильные сферы имеют дебаф; слабые без минусов и дешевле.
+# Уровни 1-2 в основном; уровень 1 в коде = amplifier 0 (т.е. effect I).
+# Слоты: HEAD | OFFHAND | ANY
+# Цены — Aris-coins. Цена 0 = выдаётся только в составе кита, не продаётся.
+# ────────────────────────────────────────────────────────────────
+spheres:
+  bounce:
+    display-name: "Сфера Прыжка"
+    material: SLIME_BALL
+    start-hex: "9AFF9A"
+    end-hex: "00C000"
+    slot: ANY
+    price: 600
+    buffs: ["jump_boost:2"]
+    debuffs: []
+    lore:
+      - "&7Высоко прыгай, без минусов."
+
+  ember:
+    display-name: "Сфера Огня"
+    material: BLAZE_POWDER
+    start-hex: "FFA500"
+    end-hex: "FF4500"
+    slot: HEAD
+    price: 800
+    buffs: ["fire_resistance:1"]
+    debuffs: []
+    lore:
+      - "&7Иммунитет к огню и лаве."
+      - "&8Слот: только шлем."
+
+  owl:
+    display-name: "Сфера Ночи"
+    material: ENDER_EYE
+    start-hex: "8A2BE2"
+    end-hex: "4B0082"
+    slot: OFFHAND
+    price: 500
+    buffs: ["night_vision:1"]
+    debuffs: []
+    lore:
+      - "&7Видишь в темноте, без минусов."
+      - "&8Слот: только off-hand."
+
+  tide:
+    display-name: "Сфера Прилива"
+    material: HEART_OF_THE_SEA
+    start-hex: "00BFFF"
+    end-hex: "1E90FF"
+    slot: ANY
+    price: 900
+    buffs: ["water_breathing:1", "conduit_power:1"]
+    debuffs: []
+    lore:
+      - "&7Дыхание + кондуит-сила."
+      - "&7Идеально для подводных рейдов."
+
+  force:
+    display-name: "Сфера Силы"
+    material: MAGMA_CREAM
+    start-hex: "FF6347"
+    end-hex: "B22222"
+    slot: ANY
+    price: 1200
+    buffs: ["strength:1"]
+    debuffs: ["slowness:1"]
+    lore:
+      - "&7+3 урона, &c−15% скорости движения."
+      - "&8Баф/дебаф: для атакующих билдов."
+
+  bulwark:
+    display-name: "Сфера Защиты"
+    material: TURTLE_SCUTE
+    start-hex: "9ACD32"
+    end-hex: "228B22"
+    slot: HEAD
+    price: 1400
+    buffs: ["resistance:1"]
+    debuffs: ["mining_fatigue:1"]
+    lore:
+      - "&7−20% входящего урона."
+      - "&c−10% скорость атаки/копания."
+
+  gale:
+    display-name: "Сфера Ветра"
+    material: GHAST_TEAR
+    start-hex: "E0FFFF"
+    end-hex: "87CEEB"
+    slot: OFFHAND
+    price: 1100
+    buffs: ["speed:2"]
+    debuffs: ["weakness:1"]
+    lore:
+      - "&7+40% скорости движения."
+      - "&c−4 урона ближнего боя."
+
+  vitality:
+    display-name: "Сфера Жизни"
+    material: APPLE
+    start-hex: "FF69B4"
+    end-hex: "FF1493"
+    slot: ANY
+    price: 1500
+    buffs: ["regeneration:1"]
+    debuffs: ["hunger:1"]
+    lore:
+      - "&7Регенерация HP, &cпища тратится быстрее."
+
+  # Сферы из китов (price 0 — не продаются в магазине):
+  nebula:
+    display-name: "Сфера Туманности"
+    material: AMETHYST_SHARD
+    start-hex: "FF69B4"
+    end-hex: "FF1493"
+    slot: ANY
+    price: 0
+    buffs: ["speed:1", "jump_boost:1"]
+    debuffs: []
+    lore:
+      - "&7Лёгкое ускорение и прыжок."
+      - "&8Получается в ките &eNebula&8."
+
+  cosmos:
+    display-name: "Сфера Звёзд"
+    material: PRISMARINE_CRYSTALS
+    start-hex: "1E90FF"
+    end-hex: "0000CD"
+    slot: ANY
+    price: 0
+    buffs: ["slow_falling:1", "speed:1"]
+    debuffs: []
+    lore:
+      - "&7Замедленное падение и +20% скорости."
+      - "&8Получается в ките &eCosmos&8."
+
+  phoenix:
+    display-name: "Сфера Феникса"
+    material: FIRE_CHARGE
+    start-hex: "FF4500"
+    end-hex: "FF0000"
+    slot: ANY
+    price: 0
+    buffs: ["fire_resistance:1", "strength:1"]
+    debuffs: ["hunger:1"]
+    lore:
+      - "&7Иммунитет к огню + сила."
+      - "&cБолее быстрый голод."
+      - "&8Получается в ките &ePhoenix&8."
+
+  phantom:
+    display-name: "★ Сфера Призрака ★"
+    material: PHANTOM_MEMBRANE
+    start-hex: "FFD700"
+    end-hex: "FF8C00"
+    slot: ANY
+    price: 0
+    buffs: ["invisibility:1"]
+    debuffs: ["hunger:2"]
+    lore:
+      - "&7Невидимость пока носишь."
+      - "&cГолод тратится вдвое быстрее."
+      - "&8Получается в ките &6Aris&8."
+
+  chaos:
+    display-name: "✦ Сфера Хаоса ✦"
+    material: NETHER_STAR
+    start-hex: "FF8C00"
+    end-hex: "FF1493"
+    slot: ANY
+    price: 0
+    buffs: ["strength:2", "speed:2", "regeneration:1"]
+    debuffs: ["wither:1"]
+    lore:
+      - "&7Сила II + Скорость II + Регенерация."
+      - "&cВитер I (−1HP/сек), пока носишь."
+      - "&7Регенерация компенсирует урон."
+      - "&8Получается в ките &dArisPlus&8."
 
 # ────────────────────────────────────────────────────────────────
 texts:
