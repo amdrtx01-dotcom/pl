@@ -1,0 +1,269 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║              ArisDonate — конфигурация                        ║
+# ║              для Minecraft 1.21.x (Paper)                    ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# Лимит регионов / домов по умолчанию (без доната)
+default-home-limit: 1
+
+# Discord-ссылка для /shop (если нет shop-links)
+discord-url: "https://discord.gg/your-server"
+shop-links: []
+
+# ────────────────────────────────────────────────────────────────
+# ДОНАТЫ
+# Каждый ранг имеет:
+#   display-name : текст-префикс (показывается перед ником)
+#   start-hex/end-hex : цвета RGB-градиента (HEX без #)
+#   region-limit : сколько регионов /sethome (или приватов) разрешено
+#   home-limit   : сколько /sethome можно создать
+#   weight       : вес ранга (выше = мощнее, сортировка в табе)
+#   shulker      : Material для иконки в /donate GUI
+#   description  : текст для hover/lore (поддерживает &-коды и <grad:#...:#...>)
+#   commands     : доступные команды (текстовая подсказка в lore)
+#   gui-slot     : слот в /donate GUI (0..53)
+#   kit          : id кита (см. секцию kits ниже) или пусто
+# ────────────────────────────────────────────────────────────────
+ranks:
+  spark:
+    display-name: "Spark"
+    start-hex: "55FF55"
+    end-hex: "AAFF00"
+    region-limit: 5
+    home-limit: 3
+    weight: 10
+    shulker: LIME_SHULKER_BOX
+    gui-slot: 19
+    kit: spark
+    description:
+      - "&7Начальный донат. Маленький старт"
+      - "&7для новых жителей сервера."
+    commands:
+      - "/sethome (×3)"
+      - "/back, /spawn, /warp"
+      - "/kit spark (раз в 24ч)"
+
+  luna:
+    display-name: "Luna"
+    start-hex: "D8D8FF"
+    end-hex: "8080FF"
+    region-limit: 15
+    home-limit: 6
+    weight: 20
+    shulker: LIGHT_BLUE_SHULKER_BOX
+    gui-slot: 20
+    kit: luna
+    description:
+      - "&7Светлый донат с базовой бронёй,"
+      - "&7полётом в спавне и /hat."
+    commands:
+      - "/sethome (×6), /home, /delhome"
+      - "/hat, /skull, /near"
+      - "/kit luna (раз в 12ч)"
+
+  stellar:
+    display-name: "Stellar"
+    start-hex: "00FFFF"
+    end-hex: "00AAFF"
+    region-limit: 30
+    home-limit: 10
+    weight: 30
+    shulker: CYAN_SHULKER_BOX
+    gui-slot: 21
+    kit: stellar
+    description:
+      - "&7Серьёзный донат: /fly, /feed"
+      - "&7и зачарованный кит."
+    commands:
+      - "/sethome (×10), /renamehome"
+      - "/fly, /feed, /heal"
+      - "/kit stellar (раз в 8ч)"
+
+  nova:
+    display-name: "Nova"
+    start-hex: "FF55FF"
+    end-hex: "AA00AA"
+    region-limit: 50
+    home-limit: 25
+    weight: 40
+    shulker: MAGENTA_SHULKER_BOX
+    gui-slot: 22
+    kit: nova
+    description:
+      - "&7Премиум-донат: алмазная экипировка,"
+      - "&7эффекты, тп-без-задержки и /workbench."
+    commands:
+      - "/sethome (×25), /near, /seen"
+      - "/feed, /heal, /fly, /speed"
+      - "/kit nova (раз в 4ч)"
+
+  aris:
+    display-name: "Aris"
+    start-hex: "FFD700"
+    end-hex: "FF8C00"
+    region-limit: 100
+    home-limit: 100
+    weight: 100
+    shulker: ORANGE_SHULKER_BOX
+    gui-slot: 24
+    kit: aris
+    description:
+      - "<grad:#FFD700:#FF8C00>★ САМЫЙ МОЩНЫЙ ДОНАТ ★</grad>"
+      - "&7Полный доступ ко всем плюшкам."
+      - "&7100 регионов и 100 /sethome'ов."
+    commands:
+      - "/sethome (×100), /renamehome, /delhome"
+      - "/fly, /speed 10, /heal, /feed, /god"
+      - "/inv (просмотр чужих инвентарей)"
+      - "/enderchest (свой и чужой)"
+      - "/kit aris — незеритка Prot V, меч Sharp VI + Fire Aspect III"
+      - "/tpa, /tphere, /back, /top, /jump"
+      - "/skull, /hat, /repair, /craft"
+      - "/v (vanish), /nick"
+
+# ────────────────────────────────────────────────────────────────
+# КИТЫ
+# Каждый кит:
+#   display-name : красивое имя (поддерживает градиенты)
+#   cooldown     : секунды между выдачами
+#   items        : список предметов с зачарованиями
+# ────────────────────────────────────────────────────────────────
+kits:
+  spark:
+    display-name: "<grad:#55FF55:#AAFF00>Кит Spark</grad>"
+    cooldown: 86400
+    items:
+      - { material: STONE_SWORD, amount: 1 }
+      - { material: STONE_PICKAXE, amount: 1 }
+      - { material: COOKED_BEEF, amount: 16 }
+      - { material: TORCH, amount: 32 }
+
+  luna:
+    display-name: "<grad:#D8D8FF:#8080FF>Кит Luna</grad>"
+    cooldown: 43200
+    items:
+      - { material: IRON_SWORD, amount: 1, enchantments: ["sharpness:2"] }
+      - { material: IRON_PICKAXE, amount: 1, enchantments: ["efficiency:2"] }
+      - { material: IRON_HELMET, amount: 1, enchantments: ["protection:1"] }
+      - { material: IRON_CHESTPLATE, amount: 1, enchantments: ["protection:1"] }
+      - { material: IRON_LEGGINGS, amount: 1, enchantments: ["protection:1"] }
+      - { material: IRON_BOOTS, amount: 1, enchantments: ["protection:1", "feather_falling:1"] }
+      - { material: GOLDEN_APPLE, amount: 4 }
+      - { material: COOKED_BEEF, amount: 32 }
+
+  stellar:
+    display-name: "<grad:#00FFFF:#00AAFF>Кит Stellar</grad>"
+    cooldown: 28800
+    items:
+      - { material: DIAMOND_SWORD, amount: 1, enchantments: ["sharpness:3", "unbreaking:2"] }
+      - { material: DIAMOND_PICKAXE, amount: 1, enchantments: ["efficiency:3", "unbreaking:2", "fortune:1"] }
+      - { material: DIAMOND_HELMET, amount: 1, enchantments: ["protection:2", "unbreaking:2"] }
+      - { material: DIAMOND_CHESTPLATE, amount: 1, enchantments: ["protection:2", "unbreaking:2"] }
+      - { material: DIAMOND_LEGGINGS, amount: 1, enchantments: ["protection:2", "unbreaking:2"] }
+      - { material: DIAMOND_BOOTS, amount: 1, enchantments: ["protection:2", "feather_falling:2", "unbreaking:2"] }
+      - { material: ENCHANTED_GOLDEN_APPLE, amount: 2 }
+      - { material: GOLDEN_APPLE, amount: 16 }
+
+  nova:
+    display-name: "<grad:#FF55FF:#AA00AA>Кит Nova</grad>"
+    cooldown: 14400
+    items:
+      - { material: DIAMOND_SWORD, amount: 1, enchantments: ["sharpness:5", "unbreaking:3", "fire_aspect:2", "mending:1"] }
+      - { material: DIAMOND_PICKAXE, amount: 1, enchantments: ["efficiency:4", "unbreaking:3", "fortune:3", "mending:1"] }
+      - { material: DIAMOND_HELMET, amount: 1, enchantments: ["protection:4", "unbreaking:3", "respiration:3", "aqua_affinity:1"] }
+      - { material: DIAMOND_CHESTPLATE, amount: 1, enchantments: ["protection:4", "unbreaking:3", "mending:1"] }
+      - { material: DIAMOND_LEGGINGS, amount: 1, enchantments: ["protection:4", "unbreaking:3"] }
+      - { material: DIAMOND_BOOTS, amount: 1, enchantments: ["protection:4", "feather_falling:4", "unbreaking:3", "depth_strider:3"] }
+      - { material: ENCHANTED_GOLDEN_APPLE, amount: 8 }
+      - { material: TOTEM_OF_UNDYING, amount: 2 }
+      - { material: ENDER_PEARL, amount: 16 }
+
+  # Самый мощный кит — Aris (по требованию: незеритка Prot V, меч Sharp VI + Fire Aspect III)
+  aris:
+    display-name: "<grad:#FFD700:#FF8C00>★ Кит Aris ★</grad>"
+    cooldown: 7200
+    items:
+      - name: "<grad:#FFD700:#FF8C00>Меч Ариса</grad>"
+        material: NETHERITE_SWORD
+        amount: 1
+        enchantments:
+          - "sharpness:6"
+          - "fire_aspect:3"
+          - "looting:5"
+          - "sweeping_edge:5"
+          - "unbreaking:5"
+          - "mending:1"
+        lore:
+          - "&7Лучший меч на сервере."
+          - "<grad:#FFD700:#FF8C00>Aris — самый мощный донат</grad>"
+      - name: "<grad:#FFD700:#FF8C00>Кирка Ариса</grad>"
+        material: NETHERITE_PICKAXE
+        amount: 1
+        enchantments:
+          - "efficiency:6"
+          - "fortune:5"
+          - "unbreaking:5"
+          - "mending:1"
+      - name: "<grad:#FFD700:#FF8C00>Шлем Ариса</grad>"
+        material: NETHERITE_HELMET
+        amount: 1
+        enchantments:
+          - "protection:5"
+          - "respiration:3"
+          - "aqua_affinity:1"
+          - "unbreaking:5"
+          - "mending:1"
+      - name: "<grad:#FFD700:#FF8C00>Нагрудник Ариса</grad>"
+        material: NETHERITE_CHESTPLATE
+        amount: 1
+        enchantments:
+          - "protection:5"
+          - "unbreaking:5"
+          - "mending:1"
+      - name: "<grad:#FFD700:#FF8C00>Поножи Ариса</grad>"
+        material: NETHERITE_LEGGINGS
+        amount: 1
+        enchantments:
+          - "protection:5"
+          - "unbreaking:5"
+          - "mending:1"
+      - name: "<grad:#FFD700:#FF8C00>Сапоги Ариса</grad>"
+        material: NETHERITE_BOOTS
+        amount: 1
+        enchantments:
+          - "protection:5"
+          - "feather_falling:4"
+          - "depth_strider:3"
+          - "soul_speed:3"
+          - "unbreaking:5"
+          - "mending:1"
+      - material: ENCHANTED_GOLDEN_APPLE
+        amount: 32
+      - material: TOTEM_OF_UNDYING
+        amount: 8
+      - material: ENDER_PEARL
+        amount: 32
+      - material: ELYTRA
+        amount: 1
+        enchantments:
+          - "unbreaking:5"
+          - "mending:1"
+      - material: FIREWORK_ROCKET
+        amount: 64
+
+# ────────────────────────────────────────────────────────────────
+# Тексты команд /rules, /motd
+# ────────────────────────────────────────────────────────────────
+texts:
+  motd:
+    - "<grad:#FFD700:#FF8C00>══════════ Добро пожаловать! ══════════</grad>"
+    - "&7Сервер &eAris &7— Minecraft 1.21.x"
+    - "&7Команды: &e/help-aris &7для полного списка."
+    - "&7Купить донат: &6/donate"
+  rules:
+    - "<grad:#FF5555:#FFAA00>══ Правила сервера ══</grad>"
+    - "&71. Не читерим, не флудим, не оскорбляем."
+    - "&72. Гриф запрещён."
+    - "&73. Реклама = бан."
+    - "&74. Уважайте администрацию."
+    - "&75. Полный устав: /motd, /rules"
