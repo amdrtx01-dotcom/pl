@@ -20,16 +20,13 @@ public class KitCommand extends BaseCommand {
         Player p = requirePlayer(sender);
         if (p == null) return;
         if (args.length == 0) {
-            p.sendMessage(Msg.parse("&7Использование: &e/kit <id>"));
-            StringBuilder sb = new StringBuilder();
-            for (KitManager.Kit k : plugin.getKitManager().all()) sb.append(k.id).append(", ");
-            p.sendMessage(Msg.parse("&6Доступные киты: &7" + sb));
+            plugin.getKitsGui().open(p);
             return;
         }
         KitManager.Kit kit = plugin.getKitManager().getKit(args[0]);
-        if (kit == null) { p.sendMessage(Msg.parse("&cКит не найден.")); return; }
-        if (!p.hasPermission("arisdonate.kit." + kit.id)) {
-            p.sendMessage(Msg.parse("&cНет права на этот кит."));
+        if (kit == null) { p.sendMessage(Msg.parse("&cКит не найден. Открой &e/kits &cдля списка.")); return; }
+        if (!plugin.getKitManager().canTakeKit(p, kit)) {
+            p.sendMessage(Msg.parse("&cНет доступа к этому киту. Купите донат: &e/donate"));
             return;
         }
         long left = plugin.getKitManager().cooldownLeft(p, kit.id);
@@ -38,7 +35,7 @@ public class KitCommand extends BaseCommand {
             return;
         }
         plugin.getKitManager().giveKit(p, kit);
-        p.sendMessage(Msg.parse("&aВыдан кит &e" + kit.id));
+        p.sendMessage(Msg.parse("&aПолучен кит " + kit.displayName));
     }
 
     @Override

@@ -2,12 +2,14 @@ package me.arisdonate.managers;
 
 import me.arisdonate.ArisDonatePlugin;
 import org.bukkit.Material;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -50,6 +52,7 @@ public class KitManager {
     public Collection<Kit> all()  { return kits.values(); }
 
     public long cooldownLeft(Player p, String kitId) {
+        if (canBypassCooldown(p)) return 0;
         Map<String, Long> map = lastUsed.get(p.getUniqueId());
         Kit k = getKit(kitId);
         if (map == null || k == null) return 0;
@@ -59,6 +62,18 @@ public class KitManager {
         return Math.max(0, left);
     }
 
+    /** Админ или OP могут получать любой кит без кулдауна и без проверки arisdonate.kit.<id>. */
+    public boolean canBypassCooldown(Player p) {
+        return p.isOp()
+                || p.hasPermission("arisdonate.kit.bypass-cooldown")
+                || p.hasPermission("arisdonate.admin");
+    }
+
+    public boolean canTakeKit(Player p, Kit kit) {
+        if (canBypassCooldown(p)) return true;
+        return p.hasPermission("arisdonate.kit." + kit.id);
+    }
+
     public void giveKit(Player p, Kit k) {
         for (ItemStack it : k.items) {
             Map<Integer, ItemStack> leftover = p.getInventory().addItem(it.clone());
@@ -66,9 +81,11 @@ public class KitManager {
                 p.getWorld().dropItemNaturally(p.getLocation(), drop);
             }
         }
-        lastUsed.computeIfAbsent(p.getUniqueId(), k2 -> new HashMap<>())
-                .put(k.id.toLowerCase(), System.currentTimeMillis());
-        saveCooldowns();
+        if (!canBypassCooldown(p)) {
+            lastUsed.computeIfAbsent(p.getUniqueId(), k2 -> new HashMap<>())
+                    .put(k.id.toLowerCase(), System.currentTimeMillis());
+            saveCooldowns();
+        }
     }
 
     private void load() {
@@ -131,6 +148,22 @@ public class KitManager {
                 }
             }
             if (im != null) it.setItemMeta(im);
+        }
+        // shulker-contents: вложенные предметы внутрь шалкера
+        Object sc = raw.get("shulker-contents");
+        if (sc instanceof List<?> scl && it.getItemMeta() instanceof BlockStateMeta bsm) {
+            if (bsm.getBlockState() instanceof ShulkerBox box) {
+                int slot = 0;
+                for (Object o : scl) {
+                    if (slot >= 27) break;
+                    if (!(o instanceof Map<?, ?> m2)) continue;
+                    ItemStack inner = parseItem(m2);
+                    if (inner == null) continue;
+                    box.getInventory().setItem(slot++, inner);
+                }
+                bsm.setBlockState(box);
+                it.setItemMeta(bsm);
+            }
         }
         return it;
     }

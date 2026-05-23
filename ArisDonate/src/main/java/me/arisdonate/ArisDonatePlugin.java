@@ -8,6 +8,7 @@ import me.arisdonate.commands.teleport.*;
 import me.arisdonate.commands.util.*;
 import me.arisdonate.commands.warp.*;
 import me.arisdonate.gui.DonateGui;
+import me.arisdonate.gui.KitsGui;
 import me.arisdonate.listeners.*;
 import me.arisdonate.managers.*;
 import me.arisdonate.util.ChatFormatter;
@@ -32,14 +33,17 @@ public class ArisDonatePlugin extends JavaPlugin {
     private MessageManager messageManager;
     private ChatFormatter chatFormatter;
     private DonateGui donateGui;
+    private KitsGui kitsGui;
 
     private NamespacedKey keyDonateRank;
+    private NamespacedKey keyKitId;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
         keyDonateRank = new NamespacedKey(this, "donate_rank");
+        keyKitId = new NamespacedKey(this, "kit_id");
 
         donateManager = new DonateManager(this);
         homeManager = new HomeManager(this);
@@ -56,11 +60,13 @@ public class ArisDonatePlugin extends JavaPlugin {
         messageManager = new MessageManager();
         chatFormatter = new ChatFormatter(this);
         donateGui = new DonateGui(this);
+        kitsGui = new KitsGui(this);
 
         // Listeners
         getServer().getPluginManager().registerEvents(new ChatFormatListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new DonateGuiListener(this), this);
+        getServer().getPluginManager().registerEvents(new KitsGuiListener(this), this);
         getServer().getPluginManager().registerEvents(new FreezeMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
 
@@ -234,6 +240,8 @@ public class ArisDonatePlugin extends JavaPlugin {
     }
 
     public NamespacedKey keyDonateRank() { return keyDonateRank; }
+    public NamespacedKey keyKitId()      { return keyKitId; }
+    public KitsGui getKitsGui()          { return kitsGui; }
     public DonateManager getDonateManager()       { return donateManager; }
     public HomeManager getHomeManager()           { return homeManager; }
     public WarpManager getWarpManager()           { return warpManager; }

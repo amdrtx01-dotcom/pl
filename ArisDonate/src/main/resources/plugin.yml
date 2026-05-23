@@ -460,3 +460,4 @@ permissions:
       arisdonate.sudo: true
       arisdonate.commandspy: true
       arisdonate.kit.*: true
+      arisdonate.kit.bypass-cooldown: true
